@@ -45,8 +45,8 @@ typedef struct{
 
 int main(void){
 	unsigned long int N, K;
-	bool isPossible;
-	int i, count, a, b;
+	bool isPossible, changed;
+	int i, count, a, b, z;
 
 	// Input
 	while(1){
@@ -58,11 +58,13 @@ int main(void){
 
 		count = 0;
 		isPossible = true;
+		changed = false;
 		a = 0;
 		b = 0;
 
 		for(i = 0; i < N; i++){
 			scanf("%ld %ld", &cars[a].C, &cars[a].S);
+			if(!isPossible)continue;
 			count++;  // Counts how many cars are in the parking lot
 
 			if(count != 1){
@@ -70,20 +72,23 @@ int main(void){
 				if(cars[a].C >= cars[a-1].S){
 					if(count >= 3){
 						for(b = (a - 1); b >= 0; b--){
-							count--;
-							if(cars[a].C <= cars[b].S){
-								if(b > 0){
-									if(cars[a].S < cars[b].S){
-										cars[b+1] = cars[a];
-										break;
-									}else{
-										cars[b+1] = cars[a];
-										break;
-									}
-								}
+							if(cars[a].C < cars[b].S){
 								if(cars[a].S < cars[b].S){
 									cars[b+1] = cars[a];
-									count--;
+									a = b + 2;
+									count = b + 2;
+									changed = true;
+									break;
+								}else{
+									isPossible = false;
+									break;
+								}
+							}else if(cars[a].C == cars[b].S){
+								if(cars[a].S < cars[b-1].S){
+									cars[b] = cars[a];
+									a = b + 1;
+									count = b + 1;
+									changed = true;
 									break;
 								}else{
 									isPossible = false;
@@ -91,8 +96,11 @@ int main(void){
 								}
 							}
 						}
+						if(!changed){
+							cars[0] = cars[a];
+							a = 1;
+						}
 					}else{
-						count--;
 						cars[a-1] = cars[a];
 					}
 					
@@ -105,7 +113,7 @@ int main(void){
 				a++;
 			}
 			// If the parking lot is filled up
-			if(count > K){
+			if(a > K){
 				isPossible = false;
 			}
 		}
@@ -116,7 +124,7 @@ int main(void){
 		}else{
 			printf("Nao\n");
 		}
-
+		free(cars);
 	}
   return 0;
 }
