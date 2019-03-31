@@ -27,6 +27,7 @@ where num_calls is the number of recursive calls, always with a space before and
 */
 #include <stdio.h>
 #include <stdlib.h>
+
 int fib(int x, int *y);
 
 int main(void){
@@ -38,7 +39,7 @@ int main(void){
     scanf("%d", &fib_number);
     int *count_calls = malloc(sizeof(int));
 
-		*count_calls = 0;
+    *count_calls = 0;
     printf("fib(%d) = %d calls = %d\n", fib_number, *count_calls, fib(fib_number, count_calls));
     
   }
@@ -51,7 +52,7 @@ int fib(int x, int *y){
   if(x == 0){
     return 0;
   }else if(x == 1){
-		return 1;
+    return 1;
   }else{
     *y = (*y) + 2;
     return (fib(x-1, y) + fib(x-2, y));
